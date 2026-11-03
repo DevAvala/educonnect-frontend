@@ -1,13 +1,7 @@
-import React from 'react';
-import { ArrowLeft, Home, Search } from 'lucide-react';
-import {Images} from "../components/images.jsx";
+import { Home, Search } from 'lucide-react';
 import {NavLink} from "react-router-dom";
 
 export const NotFoundPage = () => {
-    const goBack = () => {
-        window.history.back();
-    };
-
     const goHome = () => {
         window.location.href = '/';
     };
@@ -18,7 +12,7 @@ export const NotFoundPage = () => {
             <div className="bg-white border-b border-gray-100 px-6 py-4">
                 <NavLink to={`/`}>
                     <img
-                        src={`${Images.main_logo}`}
+                        src="/brand/educonnect-logo.png"
                         alt="EduConnect Logo Icon"
                         className="w-[120px] md:w-[170px] "
                     />

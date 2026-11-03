@@ -1,27 +1,12 @@
-import React, {useEffect} from 'react';
-import { Check, Plus, Minus, ArrowRight, X } from 'lucide-react';
+import { Check, Plus, Minus, X } from 'lucide-react';
 import { useState } from 'react';
-import {Header} from "../components/Header.jsx";
-import Footer from "../components/Footer.jsx";
-import {useLocation} from "react-router-dom";
-
-export const ScrollToTop = () => {
-    const { pathname } = useLocation();
-
-    useEffect(() => {
-        window.scrollTo(0, 0); // Scrolls to the top-left corner
-        // For smooth scrolling, you can use:
-        // window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    }, [pathname]); // Re-run effect whenever the pathname changes
-
-    return null; // This component doesn't render anything visible
-};
+import { PublicLayout } from "@/components/marketing/layout/public-layout";
 
 const PricingCard = ({ plan, price, features, description, isPremium = false }) => (
     <div
-        className={`relative flex flex-col p-8 rounded-2xl transition-all duration-300 w-full max-w-sm border
+        className={`plan-card relative flex flex-col p-8 rounded-2xl transition-all duration-300 w-full max-w-sm border
       ${isPremium
-            ? 'bg-[#1a2332] text-white border-[#1a2332] shadow-xl scale-105 z-10'
+            ? 'bg-[#1a2332] text-white border-[#1a2332] shadow-xl z-10'
             : 'bg-white text-gray-900 border-gray-100 shadow-sm'
         }`}
     >
@@ -41,7 +26,7 @@ const PricingCard = ({ plan, price, features, description, isPremium = false }) 
         <ul className="space-y-4 mb-10 flex-1">
             {features.map((feature, index) => (
                 <li key={index} className="flex items-start text-sm gap-3">
-                    <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${isPremium ? 'text-[#4ade80]' : 'text-[#4ade80]'}`} />
+                    <Check aria-label="Included" role="img" className={`h-4 w-4 flex-shrink-0 mt-0.5 $text-[#0a61a4]`} />
                     <span className={isPremium ? 'text-gray-200' : 'text-gray-600'}>{feature}</span>
                 </li>
             ))}
@@ -57,7 +42,8 @@ const FaqItem = ({ question, answer }) => {
     return (
         <div className="border-b border-gray-200 py-6">
             <button
-                className="w-full flex justify-between items-center text-left hover:text-gray-600 transition-colors"
+                aria-expanded={isOpen}
+                className="w-full flex justify-between items-center gap-4 text-left hover:text-gray-600 transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span className="text-lg font-medium text-gray-900">{question}</span>
@@ -83,73 +69,23 @@ const ComparisonSection = ({ title, items }) => (
                     <div className="text-sm font-medium text-gray-900">{item.name}</div>
                     <div className="flex justify-center md:justify-center">
                         {item.basic === true ? (
-                            <Check className="h-5 w-5 text-[#4ade80]" />
+                            <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4]" />
                         ) : item.basic === false ? (
-                            <X className="h-5 w-5 text-gray-300" />
+                            <X aria-label="Not included" role="img" className="h-5 w-5 text-gray-300" />
                         ) : (
                             <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">{item.basic}</span>
                         )}
                     </div>
                     <div className="flex justify-center md:justify-center">
                         {item.premium === true ? (
-                            <Check className="h-5 w-5 text-[#4ade80]" />
+                            <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4]" />
                         ) : item.premium === false ? (
-                            <X className="h-5 w-5 text-gray-300" />
+                            <X aria-label="Not included" role="img" className="h-5 w-5 text-gray-300" />
                         ) : (
                             <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">{item.premium}</span>
                         )}
                     </div>
                 </div>
-            ))}
-        </div>
-    </div>
-);
-
-const MobileComparisonRow = ({ name, basic, premium }) => (
-    <div className="border-b border-gray-200 py-4 px-6">
-        <div className="font-medium text-gray-900 mb-3 text-sm">{name}</div>
-        <div className="space-y-2">
-            <div className="flex items-center gap-3">
-                <span className="text-gray-600 text-xs font-semibold uppercase w-16">Basic</span>
-                <div className="flex-1 flex justify-start">
-                    {basic === true ? (
-                        <Check className="h-5 w-5 text-[#4ade80]" />
-                    ) : basic === false ? (
-                        <X className="h-5 w-5 text-gray-300" />
-                    ) : (
-                        <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">{basic}</span>
-                    )}
-                </div>
-            </div>
-            <div className="flex items-center gap-3">
-                <span className="text-gray-600 text-xs font-semibold uppercase w-16">Premium</span>
-                <div className="flex-1 flex justify-start">
-                    {premium === true ? (
-                        <Check className="h-5 w-5 text-[#4ade80]" />
-                    ) : premium === false ? (
-                        <X className="h-5 w-5 text-gray-300" />
-                    ) : (
-                        <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">{premium}</span>
-                    )}
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-const MobileComparisonSection = ({ title, items }) => (
-    <div className="mb-0">
-        <div className="bg-gray-50 py-3 px-6 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900 text-sm">{title}</h3>
-        </div>
-        <div>
-            {items.map((item, index) => (
-                <MobileComparisonRow
-                    key={index}
-                    name={item.name}
-                    basic={item.basic}
-                    premium={item.premium}
-                />
             ))}
         </div>
     </div>
@@ -259,6 +195,7 @@ const TabComparisonView = () => {
             <div className="md:hidden">
                 <div className="flex border-b border-gray-200 bg-gray-50">
                     <button
+                        aria-pressed={activeTab === 'basic'}
                         onClick={() => setActiveTab('basic')}
                         className={`flex-1 py-4 px-6 text-center font-semibold text-sm transition-colors ${
                             activeTab === 'basic'
@@ -269,10 +206,11 @@ const TabComparisonView = () => {
                         Basic Plan
                     </button>
                     <button
+                        aria-pressed={activeTab === 'premium'}
                         onClick={() => setActiveTab('premium')}
                         className={`flex-1 py-4 px-6 text-center font-semibold text-sm transition-colors ${
                             activeTab === 'premium'
-                                ? 'text-[#4f46e5] border-b-2 border-[#4f46e5] bg-white'
+                                ? 'text-[#104889] border-b-2 border-[#104889] bg-white'
                                 : 'text-gray-600 border-b-2 border-transparent'
                         }`}
                     >
@@ -292,22 +230,22 @@ const TabComparisonView = () => {
                                         <div className="font-medium text-gray-900 mb-3 text-sm">{item.name}</div>
                                         <div className="flex items-center gap-3">
                                             <span className="text-gray-600 text-xs font-semibold uppercase w-20">
-                                                {activeTab === 'basic' ? 'Included' : 'Included'}
+                                                Included
                                             </span>
                                             <div className="flex-1 flex justify-start">
                                                 {activeTab === 'basic' ? (
                                                     item.basic === true ? (
-                                                        <Check className="h-5 w-5 text-[#4ade80]" />
+                                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4]" />
                                                     ) : item.basic === false ? (
-                                                        <X className="h-5 w-5 text-gray-300" />
+                                                        <X aria-label="Not included" role="img" className="h-5 w-5 text-gray-300" />
                                                     ) : (
                                                         <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded max-w-xs">{item.basic}</span>
                                                     )
                                                 ) : (
                                                     item.premium === true ? (
-                                                        <Check className="h-5 w-5 text-[#4ade80]" />
+                                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4]" />
                                                     ) : item.premium === false ? (
-                                                        <X className="h-5 w-5 text-gray-300" />
+                                                        <X aria-label="Not included" role="img" className="h-5 w-5 text-gray-300" />
                                                     ) : (
                                                         <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded max-w-xs">{item.premium}</span>
                                                     )
@@ -327,14 +265,12 @@ const TabComparisonView = () => {
 
 export const PricingPage = () => {
     return (
-        <>
-            <Header />
-            <ScrollToTop />
+        <PublicLayout title="Pricing" className="pricing-site">
 
-            <div className="bg-[#f8fafc] min-h-screen py-20 px-6">
-                <div className="max-w-7xl mx-auto">
+            <div className="pricing-page section">
+                <div className="container">
                     {/* Hero Section */}
-                    <div className="text-center mb-20">
+                    <div className="pricing-intro text-center mb-20">
                         <h1 className="text-4xl md:text-5xl font-black text-[#1a2332] mb-4 leading-tight">
                             The Right Plan for Your School
                         </h1>
@@ -392,43 +328,43 @@ export const PricingPage = () => {
                                 </h3>
                                 <ul className="space-y-3 text-gray-600 text-sm">
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>You're transitioning from paper-based or spreadsheet management</span>
                                     </li>
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>Your school has fewer than 500 students</span>
                                     </li>
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>You need core features without advanced automation</span>
                                     </li>
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>Affordability is a primary consideration</span>
                                     </li>
                                 </ul>
                             </div>
                             <div className="bg-[#1a2332] text-white p-8 rounded-xl border border-[#1a2332]">
                                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                    <div className="h-8 w-8 rounded-full bg-[#4f46e5] flex items-center justify-center text-sm font-bold">P</div>
+                                    <div className="h-8 w-8 rounded-full bg-[#104889] flex items-center justify-center text-sm font-bold">P</div>
                                     Choose Premium If...
                                 </h3>
                                 <ul className="space-y-3 text-gray-300 text-sm">
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>You want full automation of academic processes</span>
                                     </li>
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>You need advanced analytics to drive decisions</span>
                                     </li>
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>Parent-teacher communication is a priority</span>
                                     </li>
                                     <li className="flex gap-3">
-                                        <Check className="h-5 w-5 text-[#4ade80] flex-shrink-0 mt-0.5" />
+                                        <Check aria-label="Included" role="img" className="h-5 w-5 text-[#0a61a4] flex-shrink-0 mt-0.5" />
                                         <span>You want a dedicated account manager and priority support</span>
                                     </li>
                                 </ul>
@@ -464,8 +400,7 @@ export const PricingPage = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
-        </>
+        </PublicLayout>
     );
 };
 
