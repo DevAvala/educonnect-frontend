@@ -25,18 +25,20 @@ npm run preview
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Public homepage, feature tabs, FAQs, and email-draft enquiry |
+| `/` | Public homepage, feature tabs, FAQs, and Web3Forms enquiry |
 | `/pricing` | Plans, feature comparison, mobile plan selector, and pricing FAQs |
 | `/contact` | Existing contact enquiry and meeting calendar |
 | `/legal-documents` | Privacy Policy by default |
 | `/legal-documents/privacy-policy` | Privacy Policy |
 | `/legal-documents/terms-of-service` | Terms of Service |
 | `/legal-documents/information-security` | Information Security Policy |
-| `/super-admin` | Dashboard with sample data and working local school search |
-| `/super-admin/schools` | Existing Schools shell |
-| `/super-admin/users` | Existing Users shell |
-| `/super-admin/imports` | Existing Imports shell |
-| `/super-admin/audit-logs` | Existing Audit Logs shell |
+| `/super-admin` | Authenticated overview using backend KPIs and school-status totals |
+| `/super-admin/schools` | Paginated school list and lifecycle actions |
+| `/super-admin/users` | Paginated user list and account access controls |
+| `/super-admin/admins` | Admin listing and reviewed email drafts |
+| `/super-admin/operations` | School selection and existing school operations |
+| `/super-admin/imports` | CSV validation and explicit import submission |
+| `/super-admin/audit-logs` | Filtered, paginated audit trail |
 
 Public components live in `src/components/marketing`, content in `src/content/marketing`, and styles in `src/styles`. Super Admin components and pages remain separate. `src/index.css` contains Tailwind setup and the shared brand color.
 
@@ -48,12 +50,20 @@ Legal and pricing source documents live in `src/Mds`. The cookie policy and pric
 
 ## Existing external services
 
-- Homepage enquiries prepare a `mailto:` draft for the visitor to review and send.
-- Contact enquiries retain the existing Web3Forms submission endpoint and payload.
+- Homepage and contact enquiries share the existing Web3Forms submission endpoint and payload.
+- Public Log in and Get Started links retain the school application's login and registration URLs.
 - The existing NeetoCal meeting embed loads only on the contact page.
 - Footer social links retain their existing destinations and open in a new tab.
 
-No school backend API or application authentication is connected in this branch. The Super Admin UI contains sample records and placeholders; it is not an authenticated production admin product. Keep this branch behind Vercel Deployment Protection. Do not publish it to an official production domain or remove protection as part of routine frontend work.
+Super Admin uses the existing backend contracts with in-memory bearer tokens. Its dashboard has no mock records. Homepage product demonstrations and isolated test fixtures intentionally retain examples. Admin email drafts open the operator's email app; platform email and notifications remain pending confirmed backend support. See `docs/system-admin-integration.md` for contract and session limitations. Live authentication and mutations have not been verified in this review.
+
+## Deployment configuration
+
+Set `VITE_API_BASE_URL` to the approved server origin, without `/api` or `/api/system-admin`, for each deployment environment. Deployed builds have no staging fallback. If the value is missing or invalid, public pages still work and Super Admin shows an unavailable message without sending requests. Local Vite development retains the staging default; localhost HTTP is allowed only in development.
+
+Set `VITE_SITE_URL` to the public canonical origin (defaults to `https://educonnect.com.ng`). Indexing requires both `VITE_ALLOW_INDEXING=true` and a production deployment. Vercel supplies `VERCEL_ENV`; other hosts must explicitly set `VITE_DEPLOY_ENV=production`. Defaults and previews stay `noindex`. Admin and unknown routes stay `noindex` even on production. Canonical and social metadata use the retained primary logo and update across public routes. Static HTML contains homepage metadata; this Vite SPA does not provide server-rendered metadata for every route.
+
+Keep the review branch behind Vercel Deployment Protection. Repository code cannot enable project protection; verify it in Vercel before deploying. Production domain and environment changes require separate approval.
 
 ## Maintenance
 

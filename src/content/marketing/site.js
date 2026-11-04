@@ -1,3 +1,7 @@
+export const schoolApp = {
+  login: 'https://app.educonnect.com.ng/',
+  register: 'https://app.educonnect.com.ng/register/school',
+};
 export const navigation = [
 	{
 		label: "Home",

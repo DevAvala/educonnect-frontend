@@ -26,7 +26,7 @@ const PricingCard = ({ plan, price, features, description, isPremium = false }) 
         <ul className="space-y-4 mb-10 flex-1">
             {features.map((feature, index) => (
                 <li key={index} className="flex items-start text-sm gap-3">
-                    <Check aria-label="Included" role="img" className={`h-4 w-4 flex-shrink-0 mt-0.5 $text-[#0a61a4]`} />
+                    <Check aria-label="Included" role="img" className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#0a61a4]" />
                     <span className={isPremium ? 'text-gray-200' : 'text-gray-600'}>{feature}</span>
                 </li>
             ))}

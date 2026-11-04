@@ -1,5 +1,6 @@
 import { Container } from "@/components/marketing/ui/container";
 import { ButtonLink } from "@/components/marketing/ui/button";
+import { schoolApp } from "@/content/marketing/site";
 export function HeroSection() {
 	return <section id="home" className="hero" aria-labelledby="hero-title">
       <div className="hero-background" aria-hidden="true">
@@ -13,7 +14,7 @@ export function HeroSection() {
             Keep records organised, teachers supported and parents informed.
           </p>
           <div className="hero-actions">
-            <ButtonLink href="#contact">Get Started</ButtonLink>
+            <ButtonLink href={schoolApp.register}>Get Started</ButtonLink>
           </div>
         </div>
       </Container>

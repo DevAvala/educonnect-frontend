@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Isolated public review fixture</title></head>
+<body><div id="root"></div><output id="qa-requests" style="display:block;padding:12px;font:12px monospace"></output>
+<script>
+  // Local browser QA only. No enquiry or backend request can leave this fixture.
+  const params = new URLSearchParams(location.search);
+  const requestedRoute = params.get('route') || '/';
+  const route = requestedRoute.startsWith('/') && !requestedRoute.startsWith('//') ? requestedRoute : '/';
+  history.replaceState(null, '', route + (route.includes('?') ? '&' : '?') + 'qa=public');
+  window.publicQa = { requests: [], failNext: params.has('fail') };
+  window.neetoCal = { embed() {
+    const container = document.getElementById('inline-embed-container');
+    if (container) container.textContent = 'Isolated calendar fixture';
+  } };
+  window.fetch = async (url, options) => {
+    if (String(url) !== 'https://api.web3forms.com/submit') throw new Error('Network blocked by public QA fixture');
+    window.publicQa.requests.push({ url: String(url), method: options.method, fields: Object.fromEntries(options.body.entries()) });
+    document.getElementById('qa-requests').textContent = `Isolated enquiry submissions: ${window.publicQa.requests.length}`;
+    const fail = window.publicQa.failNext;
+    window.publicQa.failNext = false;
+    return new Response(JSON.stringify({ success: !fail }), { status: fail ? 503 : 200, headers: { 'Content-Type': 'application/json' } });
+  };
+</script>
+<script type="module" src="/src/main.jsx"></script></body></html>

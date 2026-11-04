@@ -1,5 +1,7 @@
 /* Page extensions share the Lab palette and spacing, with the existing Inter typeface. */
 html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+.public-site .header-login { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; color: var(--brand-primary); font-weight: 600; }
+@media (max-width: 1023px) { .public-site .header-actions .header-login { display: none; } }
 .public-site { --radius-xl: 16px; }
 .public-site .cover-image { position: absolute; inset: 0; width: 100%; height: 100%; }
 .public-site .page-intro { max-width: 800px; margin-bottom: 48px; }

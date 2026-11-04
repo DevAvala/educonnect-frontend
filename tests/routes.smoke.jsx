@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { PassThrough } from 'node:stream';
 import assert from 'node:assert/strict';
 import App from '../src/App.jsx';
+import { adminApi } from '../src/lib/admin-session';
 
 function renderRoute(route) {
   return new Promise((resolve, reject) => {
@@ -42,15 +43,19 @@ const routes = [
 ];
 for (const [route, expected] of routes) {
   const html = await renderRoute(route);
-  assert.ok(html.includes(expected), `${route}: missing expected page content`);
+  const expectedContent = route.startsWith('/super-admin') && !adminApi ? 'System Admin is not configured' : expected;
+  assert.ok(html.includes(expectedContent), `${route}: missing expected page content`);
   assert.ok(!html.includes('Switched to client rendering'), `${route}: server render failed`);
   if (route === '/') {
+    assert.ok(html.includes('href="https://app.educonnect.com.ng/"'));
+    assert.ok(html.includes('href="https://app.educonnect.com.ng/register/school"'));
+    assert.ok(!html.includes('Continue in Email App'));
     for (const section of ['home','benefits','features','how-it-works','faqs','contact']) assert.ok(html.includes(`id="${section}"`));
     assert.equal((html.match(/role="tabpanel"/g)||[]).length,4);
     assert.equal((html.match(/class="faq-item"/g)||[]).length,6);
   }
   if (route === '/pricing') for(const price of ['150,000','350,000']) assert.ok(html.includes(price));
-  if (route === '/contact') for(const name of ['name','email','phone','description','organizationName']) assert.ok(html.includes(`name="${name}"`));
+  if (route === '/contact' || route === '/') for(const name of ['name','email','phone','description','organizationName']) assert.ok(html.includes(`name="${name}"`));
   if(route.startsWith('/super-admin')) {
     for (const sample of ['Greenfield Academy', 'Bright Future College', 'EDU1001']) assert.ok(!html.includes(sample));
   }

@@ -8,9 +8,13 @@ Backend contract inspected: `DevAvala/educonnect-backend`, `dev` commit
 ## Configuration and access
 
 Open `/super-admin` and sign in with a System Admin account. The frontend uses
-`VITE_API_BASE_URL` (server origin without `/api/system-admin`). When omitted,
-it targets the previously supplied staging origin:
-`https://educonnect-backend-staging.onrender.com`.
+`VITE_API_BASE_URL` (HTTPS server origin without `/api` or `/api/system-admin`).
+Every deployed build requires an explicit value. Missing or invalid configuration
+shows an unavailable admin screen without breaking public pages or sending API
+requests. Only local Vite development defaults to the previously supplied staging
+origin, `https://educonnect-backend-staging.onrender.com`. Localhost HTTP is
+permitted only in development. The approved production API origin has not been
+provided or configured during this review.
 
 The Postman environment in the fork defaults to localhost. Deployment/version
 parity with the staging server has not been established. No production API

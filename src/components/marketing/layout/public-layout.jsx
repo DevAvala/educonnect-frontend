@@ -8,7 +8,6 @@ import '@/styles/public-pages.css';
 export function PublicLayout({ title, children, className = '' }) {
   const { pathname, hash } = useLocation();
   useEffect(() => {
-    document.title = `${title} | EduConnect`;
     // Wait for the lazy page to mount before resolving a cross-page section link.
     const frame = requestAnimationFrame(() => {
       let targetId = hash.slice(1);

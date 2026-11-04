@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { navigation } from "@/content/marketing/site";
+import { navigation, schoolApp } from "@/content/marketing/site";
 import { ButtonLink } from "@/components/marketing/ui/button";
 import { Container } from "@/components/marketing/ui/container";
 export function Header() {
@@ -62,7 +62,8 @@ export function Header() {
             </a>)}
         </nav>
         <div className="header-actions">
-          <ButtonLink href="/#contact" className="header-cta" onClick={followLink}>
+          <a href={schoolApp.login} className="header-login">Log in</a>
+          <ButtonLink href={schoolApp.register} className="header-cta" onClick={followLink}>
             Get Started
           </ButtonLink>
           <button ref={toggle} className="menu-toggle" aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? "Close navigation" : "Open navigation"} onClick={() => setOpen((value) => !value)}>
@@ -75,7 +76,8 @@ export function Header() {
           {navigation.map((item) => <a key={item.href} href={item.href} onClick={followLink}>
               {item.label}
             </a>)}
-          <ButtonLink href="/#contact" onClick={followLink}>
+          <a href={schoolApp.login} onClick={followLink}>Log in</a>
+          <ButtonLink href={schoolApp.register} onClick={followLink}>
             Get Started
           </ButtonLink>
         </Container>

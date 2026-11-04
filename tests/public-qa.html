@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Public frontend QA</title></head>
+<body style="margin:0;background:#dfe5ef;font:14px sans-serif">
+<nav style="padding:12px">TEST FIXTURES ONLY · <a href="?width=390">Phone</a> · <a href="?width=768">Tablet</a> · <a href="?width=1440">Desktop</a></nav>
+<iframe title="Public fixture" style="border:0;height:1000px;background:white"></iframe>
+<script>
+  const params = new URLSearchParams(location.search);
+  const width = Number(params.get('width'));
+  const frame = document.querySelector('iframe');
+  frame.style.width = ([390, 768, 1440].includes(width) ? width : 1440) + 'px';
+  const target = new URLSearchParams();
+  if (params.has('route')) target.set('route', params.get('route'));
+  if (params.has('fail')) target.set('fail', '1');
+  frame.src = '/tests/public-review-qa.html?' + target;
+</script></body></html>

@@ -1,23 +1,34 @@
-export const enquiryFields = [
-	"name",
-	"email",
-	"school",
-	"message"
-];
+export const enquiryLimits = { name: 100, email: 254, phone: 30, organizationName: 150, description: 1200 };
 export function validateEnquiry(data) {
-	const errors = {};
-	if (!data.name.trim()) errors.name = "Please enter your name.";
-	if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) errors.email = "Enter a valid email address.";
-	if (!data.school.trim()) errors.school = "Please enter your school or organisation.";
-	if (data.message.trim().length < 10) errors.message = "Tell us a little more (at least 10 characters).";
-	if (data.name.length > 100) errors.name = "Use 100 characters or fewer.";
-	if (data.email.length > 254) errors.email = "Use 254 characters or fewer.";
-	if (data.school.length > 150) errors.school = "Use 150 characters or fewer.";
-	if (data.message.length > 1200) errors.message = "Use 1,200 characters or fewer.";
-	return errors;
+  const errors = {};
+  if (!data.name.trim()) errors.name = 'Name is required';
+  if (!data.organizationName.trim()) errors.organizationName = 'Organization Name is required';
+  if (!data.description.trim()) errors.description = 'Description is required';
+  if (!data.email.trim()) errors.email = 'Email is required';
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) errors.email = 'Please enter a valid email';
+  const phone = data.phone.trim();
+  if (!phone) errors.phone = 'Phone Number is required';
+  else if (!/^\+?[\d\s()-]+$/.test(phone) || !/^\d{7,15}$/.test(phone.replace(/\D/g, ''))) errors.phone = 'Please enter a valid phone number';
+  for (const [field, limit] of Object.entries(enquiryLimits)) {
+    if (data[field].length > limit) errors[field] = `Use ${limit} characters or fewer.`;
+  }
+  return errors;
 }
-export function buildEmailDraft(data, destination) {
-	const subject = `School enquiry: ${data.school.trim()}`;
-	const body = `Name: ${data.name.trim()}\nEmail: ${data.email.trim()}\nSchool: ${data.school.trim()}\n\n${data.message.trim()}`;
-	return `mailto:${destination}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+export async function submitEnquiry(data, fetcher = fetch) {
+  const payload = new FormData();
+  // Retain the existing public Web3Forms key and payload, shared by both forms.
+  payload.append('access_key', '41706b4e-db86-48a7-9570-4ecd950c62da');
+  for (const field of ['name', 'email', 'phone', 'description']) payload.append(field, data[field].trim());
+  payload.append('Organization Name', data.organizationName.trim());
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  try {
+    const response = await fetcher('https://api.web3forms.com/submit', { method: 'POST', body: payload, signal: controller.signal });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || result?.success !== true) throw new Error('Your enquiry could not be submitted. Please try again.');
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error('The server took too long to respond. Please try again shortly.');
+    throw error;
+  } finally { clearTimeout(timeout); }
 }

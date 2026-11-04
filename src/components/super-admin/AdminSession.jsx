@@ -6,6 +6,7 @@ import Login from '../../pages/super-admin/Login';
 export default function SessionBoundary() {
   const [session, setSession] = useState({ status: 'checking', user: null, message: '' });
   useEffect(() => {
+    if (!adminApi) return;
     let active = true;
     const unsubscribe = adminApi.onSessionExpired(() => setSession({ status: 'signed-out', user: null, message: 'Your session has ended. Please sign in again.' }));
     adminApi.refresh().then(user => {
@@ -25,6 +26,11 @@ export default function SessionBoundary() {
     catch { message = 'Signed out on this page. The server could not confirm logout; close your browser if using a shared device.'; }
     setSession({ status: 'signed-out', user: null, message });
   }
+  if (!adminApi) return <main className="admin-ui admin-session-screen"><section className="admin-login admin-card">
+    <h1>System Administration</h1>
+    <p role="status">System Admin is not configured for this site. Please contact the site administrator.</p>
+    <a href="/" className="admin-back">Back to Home</a>
+  </section></main>;
   if (session.status === 'checking') return <div className="admin-session-screen" role="status">Checking your session…</div>;
   if (session.status !== 'signed-in') return <Login onLogin={login} message={session.message} />;
   return <AdminSession.Provider value={{ api: adminApi, user: session.user, logout }}><Outlet /></AdminSession.Provider>;
