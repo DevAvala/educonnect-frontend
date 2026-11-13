@@ -20,7 +20,7 @@ export function resolveSiteSettings({ origin = 'https://educonnect.com.ng', allo
 export function pageMetadata(pathname, { origin = 'https://educonnect.com.ng', indexable = false } = {}) {
   const path = pathname.replace(/\/$/, '') || '/';
   const publicPage = Object.hasOwn(pages, path);
-  const title = `${publicPage ? pages[path] : path.startsWith('/super-admin') ? 'System Administration' : 'Page Not Found'} | EduConnect`;
+  const title = `${publicPage ? pages[path] : 'Page Not Found'} | EduConnect`;
   const canonical = publicPage ? new URL(path, origin).href : null;
   const image = new URL('/brand/educonnect-logo.png', origin).href;
   return {
