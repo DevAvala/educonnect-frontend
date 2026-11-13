@@ -1,0 +1,4 @@
+@import "tailwindcss" source(none);
+@source "./AdminApp.jsx";
+@source "./components/super-admin";
+@source "./pages/super-admin";
