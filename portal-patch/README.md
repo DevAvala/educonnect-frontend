@@ -82,10 +82,3 @@ The portal only calls endpoints that exist on the backend. These features are no
 4. **Archived and deleted schools:** a school that is both archived and deleted only appears under `all`.
 5. **Overview data:** cached by the backend for 5 minutes, and "activity" counts operations, not unique users.
 6. **Refresh cookie:** login does not return a refresh token, so staying signed in across page reloads is not verified.
-
-### Questions for the backend team
-
-1. Which System Admin endpoints exist for classes, subjects, finance, attendance, report cards, timetable and events?
-2. Is there an endpoint for platform email or notifications?
-3. Can the six mismatches above be fixed on the backend?
-4. What is the approved production API origin for `VITE_API_BASE_URL`?
